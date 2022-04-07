@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scoped CSS Variables and JS</title>
 </head>
 <body>
@@ -18,7 +20,7 @@
     <input id="base" type="color" name="base" value="#ffc600">
   </div>
 
-  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500" alt="img">
 
   <style>
     :root {
@@ -69,8 +71,8 @@
 
     inputs.forEach(input => input.addEventListener('change', handleUpdate));
     inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
-  </script>
 
+  </script>
 
 </body>
 </html>
