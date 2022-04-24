@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LocalStorage</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -22,6 +24,9 @@
     <form class="add-items">
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
+      <input type="submit" id="deleteAll" value="Delete All Items">
+      <input type="submit" id="checkAll" value="Check All Items">
+      <input type="submit" id="unCheckAll" value="Un Check All Items">
     </form>
   </div>
 
@@ -29,7 +34,11 @@
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
   const items = JSON.parse(localStorage.getItem('items')) || [];
+  const deleteAll = document.getElementById('deleteAll');
+  const checkAll = document.getElementById('checkAll');
+  const unCheckAll = document.getElementById('unCheckAll');
 
+  
   function addItem(e) {
     e.preventDefault();
     const text = (this.querySelector('[name=item]')).value;
@@ -43,32 +52,59 @@
     localStorage.setItem('items', JSON.stringify(items));
     this.reset();
   }
-
+  
   function populateList(plates = [], platesList) {
     platesList.innerHTML = plates.map((plate, i) => {
       return `
-        <li>
-          <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''} />
-          <label for="item${i}">${plate.text}</label>
+      <li>
+        <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''} />
+        <label for="item${i}">${plate.text}</label>
         </li>
-      `;
-    }).join('');
+        `;
+      }).join('');
   }
-
+  
   function toggleDone(e) {
     if (!e.target.matches('input')) return; // skip this unless it's an input
-    const el = e.target;
-    const index = el.dataset.index;
+    const element = e.target;
+    const index = element.dataset.index;
     items[index].done = !items[index].done;
     localStorage.setItem('items', JSON.stringify(items));
     populateList(items, itemsList);
   }
+  
+  function deleteAllItems(e) {
+    e.preventDefault();
+    localStorage.removeItem('items');
+    items.splice(0, items.length);
+    populateList(items, itemsList);
+  }
+  
+  function checkAllItems(e) {
+    e.preventDefault();
+    let itemsToCheck = JSON.parse(localStorage.getItem('items'));
+    itemsToCheck.map((item) => item.done = true);
+    localStorage.setItem('items', JSON.stringify(itemsToCheck));
+    populateList(itemsToCheck, itemsList);
+  }
+  
+  function unCheckAllItems(e) {
+    e.preventDefault();
+    let itemsToUnCheck = JSON.parse(localStorage.getItem('items'));
+    itemsToUnCheck.map((item) => item.done = false);
+    localStorage.setItem('items', JSON.stringify(itemsToUnCheck));
+    populateList(itemsToUnCheck, itemsList);
+  }
 
   addItems.addEventListener('submit', addItem);
   itemsList.addEventListener('click', toggleDone);
-
+  deleteAll.addEventListener('click', deleteAllItems);
+  checkAll.addEventListener('click', checkAllItems);
+  unCheckAll.addEventListener('click', unCheckAllItems);
+  
   populateList(items, itemsList);
-
+  
+  
 </script>
 
 
